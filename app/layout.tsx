@@ -27,11 +27,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
         <Nav />
-
-        {children}
+        <main className="mx-auto flex w-full max-w-7xl ">{children}</main>
         <Toaster />
       </body>
     </html>

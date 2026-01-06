@@ -19,6 +19,16 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { analyzeJobs } from "./action";
 import { LoaderCircle, ArrowRight } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardAction,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
 
 const FormSchema = z.object({
   JobA: z.string().min(2, {
@@ -58,39 +68,61 @@ export default function InputForm() {
   const isSubmitting = form.formState.isSubmitting;
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-        <FormField
-          control={form.control}
-          name="JobA"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Job A</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter job description A" {...field} />
-              </FormControl>
-              <FormDescription>
-                Enter the first job offer details.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="JobB"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Job B</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter job description B" {...field} />
-              </FormControl>
-              <FormDescription>
-                Enter the second job offer details.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+        <div className="w-full gap-4 flex justify-between">
+          <Card className="w-full">
+            <CardHeader>
+              <CardTitle>Job A</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <FormField
+                control={form.control}
+                name="JobA"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Type your message here."
+                        {...field}
+                        className="h-64 resize-none"
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Enter the first job offer details.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
+          <Card className="w-full">
+            <CardHeader>
+              <CardTitle>Job B</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <FormField
+                control={form.control}
+                name="JobB"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Type your message here."
+                        {...field}
+                        className="h-64 resize-none"
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Enter the first job offer details.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
+        </div>
         <Button type="submit" disabled={isSubmitting} className="group">
           {isSubmitting ? (
             <>
@@ -114,14 +146,16 @@ export default function InputForm() {
             </>
           )}
         </Button>
-      </form>
 
-      {result && (
-        <div className="max-w-full mx-auto mx-au">
-          <h3 className="text-lg font-semibold mb-4">Analysis Result:</h3>
-          <pre>{JSON.stringify(result, null, 2)}</pre>
-        </div>
-      )}
+        {result && (
+          <div className="max-w-full mx-auto">
+            <h3 className="text-lg font-semibold mb-4">Analysis Result:</h3>
+            <pre className="whitespace-pre-wrap wrap-break-word overflow-x-auto bg-gray-50 p-4 rounded-md text-sm">
+              {JSON.stringify(result, null, 2)}
+            </pre>
+          </div>
+        )}
+      </form>
     </Form>
   );
 }
