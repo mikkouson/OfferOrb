@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { analyzeJobs } from "./action";
-import { LoaderCircle, ArrowRight } from "lucide-react";
+import { LoaderCircle, ArrowRight, Stars, ArrowLeftRight } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Card,
@@ -69,7 +69,19 @@ export default function InputForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
-        <div className="w-full gap-4 flex justify-between">
+        <div className="flex flex-col items-center py-6">
+          <h2 className="text-fuchsia-600 scroll-m-20 text-3xl font-bold tracking-tight first:mt-0">
+            Reviewing multiple offers?
+          </h2>
+
+          <p className="leading-7 not-first:mt-4 text-center">
+            Paste the job descriptions, salary details, and benefits for two
+            positions below.
+            <br /> Our AI will help you decide which one is the best fit for
+            your future.
+          </p>
+        </div>
+        <div className="w-full py-4 flex flex-col sm:flex-row gap-4 justify-between">
           <Card className="w-full">
             <CardHeader>
               <CardTitle>Job A</CardTitle>
@@ -123,29 +135,36 @@ export default function InputForm() {
             </CardContent>
           </Card>
         </div>
-        <Button type="submit" disabled={isSubmitting} className="group">
-          {isSubmitting ? (
-            <>
-              Submitting
-              <LoaderCircle
-                className="animate-spin ms-2"
-                size={16}
-                strokeWidth={2}
-                aria-hidden="true"
-              />
-            </>
-          ) : (
-            <>
-              Submit
-              <ArrowRight
-                className="-me-1 ms-2 opacity-60 transition-transform group-hover:translate-x-0.5"
-                size={16}
-                strokeWidth={2}
-                aria-hidden="true"
-              />
-            </>
-          )}
-        </Button>
+        <div className="w-full flex justify-center">
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="group rounded-2xl "
+          >
+            {isSubmitting ? (
+              <>
+                Comparing
+                <LoaderCircle
+                  className="animate-spin ms-2"
+                  size={16}
+                  strokeWidth={2}
+                  aria-hidden="true"
+                />
+              </>
+            ) : (
+              <div className="flex gap-4 items-center">
+                <Stars />
+                <span className="text-md">Compare</span>
+                <ArrowLeftRight
+                  className="-me-1 ms-2 opacity-60 transition-transform group-hover:translate-x-0.5"
+                  size={16}
+                  strokeWidth={2}
+                  aria-hidden="true"
+                />
+              </div>
+            )}
+          </Button>
+        </div>
 
         {result && (
           <div className="max-w-full mx-auto">
