@@ -1,8 +1,7 @@
 "use server";
 
 import { JobSchema, JobSchemaType } from "./type";
-import { NextRequest, NextResponse } from "next/server";
-import { OpenAI } from "openai";
+import { Ollama } from "ollama";
 
 export async function analyzeJobs(formData: JobSchemaType) {
   const result = JobSchema.safeParse(formData);
@@ -44,29 +43,25 @@ export async function analyzeJobs(formData: JobSchemaType) {
     Assign a score from 0-100. Determine a winner.
   `;
 
-  const client = new OpenAI({
-    baseURL: "https://router.huggingface.co/v1",
-    apiKey: process.env.NEXT_PUBLIC_HF_TOKEN,
+  const ollama = new Ollama({
+    host: "https://ollama.com",
+    headers: {
+      Authorization: "Bearer " + process.env.NEXT_PUBLIC_OLLAMA,
+    },
+  });
+  const stream = await ollama.chat({
+    model: "gpt-oss:120b",
+    messages: [{ role: "user", content: prompt }],
+    stream: true,
   });
 
-  const response = await client.chat.completions.create({
-    model: "zai-org/GLM-4.7:novita",
-    messages: [
-      {
-        role: "user",
-        content: prompt,
-      },
-    ],
-  });
+  let content = "";
+
+  for await (const part of stream) {
+    content += part.message?.content ?? "";
+  }
 
   return {
-    content: response.choices[0]?.message?.content ?? "",
-    usage: response.usage
-      ? {
-          prompt_tokens: response.usage.prompt_tokens,
-          completion_tokens: response.usage.completion_tokens,
-          total_tokens: response.usage.total_tokens,
-        }
-      : null,
+    content,
   };
 }
