@@ -30,17 +30,85 @@ export async function analyzeJobs(formData: JobSchemaType) {
     ${formData.JobA}
 
     JOB OFFER B:
-    ${formData.JobA}
+    ${formData.JobB}
 
     Compare them based on: Salary, Role, Growth, Culture, and Work-Life Balance.
     
     CRITICAL INSTRUCTIONS FOR BREVITY:
     - Keep "summary" to 2 sentences maximum. Direct and punchy.
-    - Keep "jobAAnalysis" and "jobBAnalysis" in comparisonPoints to MAX 10-15 words. extremely concise.
+    - Keep "jobAAnalysis" and "jobBAnalysis" in comparisonPoints to MAX 10-15 words. extremely concise add whos the winner.
     - "salaryInsight" should be 1 sentence.
     - Pros/Cons should be short phrases (e.g., "High base salary", "Remote work"), not sentences.
     
     Assign a score from 0-100. Determine a winner.
+
+
+    use this as format
+    {
+  "isValid": ,
+  "summary": "",
+  "JobA": "",
+  "JobB": "",
+  "winner": "",
+  "scores": {
+    "A": 
+    "B": 
+  },
+  "prosA": [
+    "",
+    "",
+    "",
+   
+  ],
+  "consA": [
+    "",
+    "",
+    "",
+  ],
+  "prosB": [
+    "",
+    "",
+    "",
+  ],
+  "consB": [
+       "",
+    "",
+    "",
+  ],
+  "comparisonPoints": [
+    {
+      "criterion": "",
+      "jobAAnalysis": "",
+      "jobBAnalysis":"",
+      "winner": "" company name
+    },
+    {
+      "criterion": "",
+      "jobAAnalysis": "",
+      "jobBAnalysis": "",
+      "winner": "",
+    },
+    {
+      "criterion": "",
+      "jobAAnalysis": "",
+      "jobBAnalysis": "",
+      "winner": ""
+    },
+    {
+      "criterion": "",
+      "jobAAnalysis": "",
+      "jobBAnalysis": "",
+      "winner": ""
+    },
+    {
+      "criterion": "",
+      "jobAAnalysis": "",
+      "jobBAnalysis": "",
+      "winner": ""
+    }
+  ],
+  "salaryInsight": ""
+}
   `;
 
   const ollama = new Ollama({
@@ -49,19 +117,18 @@ export async function analyzeJobs(formData: JobSchemaType) {
       Authorization: "Bearer " + process.env.NEXT_PUBLIC_OLLAMA,
     },
   });
-  const stream = await ollama.chat({
+  const response = await ollama.chat({
     model: "gpt-oss:120b",
     messages: [{ role: "user", content: prompt }],
-    stream: true,
+    stream: false,
+    format: "json",
   });
 
-  let content = "";
-
-  for await (const part of stream) {
-    content += part.message?.content ?? "";
+  try {
+    const res = JSON.parse(response.message.content);
+    return res;
+  } catch (error) {
+    console.log(error);
+    throw new Error("error");
   }
-
-  return {
-    content,
-  };
 }
