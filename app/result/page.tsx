@@ -1,16 +1,16 @@
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
   CardAction,
   CardContent,
-  CardFooter,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
-import data from "./data.json";
 import { Progress } from "@/components/ui/progress";
 import clsx from "clsx";
+import { Check, X } from "lucide-react";
+import data from "./data.json";
 const Page = () => {
   return (
     <main className="w-full ">
@@ -79,6 +79,124 @@ const Page = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* comparison */}
+      {/* JOB A */}
+      <div className="grid grid-cols-2 gap-4">
+        <Card className="w-full mt-10">
+          <CardHeader>
+            <CardTitle className="text-2xl md:text-4xl  leading-[1.1] flex gap-2">
+              <span className="text-indigo-600">{data.JobA}</span>
+            </CardTitle>
+            {/* <CardDescription className="text-lg text-slate-500 leading-relaxed font-medium max-w-2xl">
+              {data.summary}
+            </CardDescription> */}
+            <CardAction>
+              {" "}
+              {data.winner === data.JobA ? (
+                <Badge className="bg-indigo-600">Winner</Badge>
+              ) : (
+                <Badge className="">Alternative</Badge>
+              )}{" "}
+            </CardAction>
+          </CardHeader>
+
+          <CardContent className="gap-4">
+            {/* pros */}
+            <div className="space-y-2">
+              <Badge className="bg-emerald-600">Key Advantages</Badge>
+
+              {data.prosA.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center gap-3 px-6 py-3 rounded-xl
+                 bg-emerald-400/10 backdrop-blur-md
+                 border border-emerald-400/30
+                 shadow-sm shadow-emerald-500/10 "
+                >
+                  <Check className="w-4 h-4 text-emerald-500" />
+                  <p className="text-sm font-medium t">{item}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* cons */}
+
+            <div className="space-y-2 mt-4">
+              <Badge className="bg-red-600">Considerations</Badge>
+              {data.prosA.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center gap-3 px-6 py-3 rounded-xl
+                 bg-red-400/10 backdrop-blur-md
+                 border border-red-400/30
+                 shadow-sm shadow-red-500/10 "
+                >
+                  <X className="w-4 h-4 text-red-500" />
+                  <p className="text-sm font-medium t">{item}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* JOB B */}
+        <Card className="w-full mt-10">
+          <CardHeader>
+            <CardTitle className="text-2xl md:text-4xl  leading-[1.1] flex gap-2">
+              <span className="">{data.JobB}</span>
+            </CardTitle>
+            {/* <CardDescription className="text-lg text-slate-500 leading-relaxed font-medium max-w-2xl">
+              {data.summary}
+            </CardDescription> */}
+            <CardAction>
+              {data.winner === data.JobB ? (
+                <Badge className="bg-indigo-600">Winner</Badge>
+              ) : (
+                <Badge className="">Alternative</Badge>
+              )}{" "}
+            </CardAction>
+          </CardHeader>
+
+          <CardContent className="gap-4">
+            {/* pros */}
+            <div className="space-y-2">
+              <Badge className="bg-emerald-600">Key Advantages</Badge>
+
+              {data.prosB.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center gap-3 px-6 py-3 rounded-xl
+                 bg-emerald-400/10 backdrop-blur-md
+                 border border-emerald-400/30
+                 shadow-sm shadow-emerald-500/10 "
+                >
+                  <Check className="w-4 h-4 text-emerald-500" />
+                  <p className="text-sm font-medium t">{item}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* cons */}
+
+            <div className="space-y-2 mt-4">
+              <Badge className="bg-red-600">Considerations</Badge>
+              {data.consB.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center gap-3 px-6 py-3 rounded-xl
+                 bg-red-400/10 backdrop-blur-md
+                 border border-red-400/30
+                 shadow-sm shadow-red-500/10 "
+                >
+                  <X className="w-4 h-4 text-red-500" />
+                  <p className="text-sm font-medium t">{item}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </main>
   );
 };

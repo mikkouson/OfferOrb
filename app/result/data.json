@@ -4,6 +4,8 @@
   "JobA": "Twine",
   "JobB": "Greenstone",
   "winner": "Greenstone",
+  "loser": "Twine",
+
   "scores": {
     "A": 78,
     "B": 85
