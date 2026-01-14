@@ -7,6 +7,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
 import { Progress } from "@/components/ui/progress";
 import clsx from "clsx";
 import { Check, X } from "lucide-react";
@@ -124,7 +135,7 @@ const Page = () => {
 
             <div className="space-y-2 mt-4">
               <Badge className="bg-red-600">Considerations</Badge>
-              {data.prosA.map((item, idx) => (
+              {data.consA.map((item, idx) => (
                 <div
                   key={idx}
                   className="flex items-center gap-3 px-6 py-3 rounded-xl
@@ -196,7 +207,71 @@ const Page = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* comparison point */}
       </div>
+      <Card className="w-full mt-10">
+        <CardHeader>
+          <CardTitle className="text-5xl md:text-6xl  leading-[1.1] flex gap-2">
+            <span className="text-indigo-600">Comparison Points</span>
+          </CardTitle>
+          <CardDescription className="text-lg text-slate-500 leading-relaxed font-medium max-w-2xl">
+            {/* {data.summary} */}
+          </CardDescription>
+          <CardAction></CardAction>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableCaption>A list of your recent invoices.</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-25">Criterion</TableHead>
+                <TableHead
+                  className={clsx(
+                    "",
+                    data.winner === data.JobA ? "text-indigo-500" : ""
+                  )}
+                >
+                  {data.JobA}
+                </TableHead>
+                <TableHead
+                  className={clsx(
+                    "",
+                    data.winner === data.JobB ? "text-indigo-500" : ""
+                  )}
+                >
+                  {data.JobB}
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {data.comparisonPoints.map((item) => (
+                <TableRow key={item.criterion}>
+                  <TableCell className="font-medium">
+                    {item.criterion}
+                  </TableCell>
+                  <TableCell
+                    className={clsx(
+                      "font-medium",
+                      item.winner === data.JobA ? "bg-indigo-50" : "bg-white"
+                    )}
+                  >
+                    {item.jobAAnalysis}
+                  </TableCell>
+                  <TableCell
+                    className={clsx(
+                      "font-medium",
+                      item.winner === data.JobB ? "bg-indigo-50" : "bg-white"
+                    )}
+                  >
+                    {item.jobBAnalysis}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </main>
   );
 };
