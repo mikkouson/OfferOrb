@@ -1,12 +1,6 @@
 "use client";
+
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -15,286 +9,331 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Progress } from "@/components/ui/progress";
 import clsx from "clsx";
-import { Check, X, Trophy, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import data from "./data.json";
+import {
+  Activity,
+  AlertCircle,
+  ArrowDown,
+  Check,
+  DollarSign,
+  MoveRight,
+  RefreshCcw,
+  XCircle,
+} from "lucide-react";
+import Link from "next/link";
+import { useDataStore } from "../store";
 
 const ScoreOverview = ({
   name,
   score,
   isWinner,
+  isTie,
 }: {
   name: string;
   score: number;
   isWinner: boolean;
+  isTie: boolean;
 }) => (
   <div
     className={clsx(
-      "p-8 rounded-2xl border-2 transition-all duration-300",
-      isWinner
-        ? "bg-primary/10 border-primary shadow-lg"
-        : "bg-secondary/30 border-border hover:border-muted-foreground",
+      "relative p-8 border-2 transition-all duration-300",
+      isTie
+        ? "bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800"
+        : isWinner
+          ? "bg-zinc-950 dark:bg-zinc-100 text-zinc-50 dark:text-zinc-950 border-zinc-950 dark:border-zinc-100"
+          : "bg-background border-zinc-200 dark:border-zinc-800 opacity-60",
     )}
   >
-    <div className="flex justify-between items-end mb-4">
-      <span className="font-semibold text-muted-foreground uppercase tracking-widest text-xs">
-        {name}
-      </span>
-      <span
-        className={clsx(
-          "text-4xl font-black",
-          isWinner ? "text-primary" : "text-foreground/60",
-        )}
-      >
+    <div className="flex justify-between items-start mb-6">
+      <div className="space-y-1">
+        <p
+          className={clsx(
+            "text-[10px] font-black uppercase tracking-[0.2em]",
+            isWinner
+              ? "text-zinc-400 dark:text-zinc-500"
+              : "text-zinc-400 dark:text-zinc-600",
+          )}
+        >
+          Match Rating
+        </p>
+        <h3 className="text-base md:text-lg font-black uppercase tracking-tighter leading-tight max-w-[220px]">
+          {name}
+        </h3>
+      </div>
+      <span className="text-4xl md:text-5xl font-black tabular-nums tracking-tighter italic">
         {score}%
       </span>
     </div>
-    <Progress
-      value={score}
-      className={clsx(
-        "h-3 rounded-full",
-        isWinner ? "[&>div]:bg-primary" : "[&>div]:bg-muted-foreground/40",
-      )}
-    />
+    <div className="w-full bg-zinc-200 dark:bg-zinc-800 h-1.5">
+      <div
+        className={clsx(
+          "h-full transition-all duration-700",
+          isWinner
+            ? "bg-zinc-50 dark:bg-zinc-950"
+            : "bg-zinc-950 dark:bg-zinc-50",
+        )}
+        style={{ width: `${score}%` }}
+      />
+    </div>
   </div>
 );
 
-const JobDetailCard = ({
-  name,
-  isWinner,
-  pros,
-  cons,
-}: {
-  name: string;
-  isWinner: boolean;
-  pros: string[];
-  cons: string[];
-}) => (
-  <Card
-    className={clsx(
-      "w-full transition-all duration-300 overflow-hidden",
-      isWinner
-        ? "ring-2 ring-primary shadow-xl border-primary"
-        : "hover:shadow-lg border-border",
-    )}
-  >
-    {isWinner && (
-      <div className="h-1 bg-gradient-to-r from-primary to-accent"></div>
-    )}
-
-    <CardHeader className="pb-6">
-      <div className="flex items-center justify-between gap-4">
-        <CardTitle className="text-3xl font-black tracking-tight">
-          {name}
-        </CardTitle>
-        <Badge
-          className={clsx(
-            "px-3 py-1 font-semibold",
-            isWinner
-              ? "bg-primary text-primary-foreground"
-              : "bg-muted text-muted-foreground",
-          )}
-        >
-          {isWinner ? "★ Recommended" : "Alternative"}
-        </Badge>
-      </div>
-    </CardHeader>
-
-    <CardContent className="space-y-6">
-      {/* Pros Section */}
-      <div className="space-y-3">
-        <h4 className="text-xs font-black uppercase text-emerald-600 flex items-center gap-2 tracking-wider">
-          <Check className="w-4 h-4" /> Key Advantages
-        </h4>
-        <div className="grid gap-2.5">
-          {pros.map((item, idx) => (
-            <div
-              key={idx}
-              className="flex items-start gap-3 px-4 py-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50 hover:shadow-sm transition-all"
-            >
-              <Check className="w-5 h-5 text-emerald-600 dark:text-emerald-400 mt-0.5 flex-shrink-0" />
-              <p className="text-sm text-emerald-900 dark:text-emerald-100 leading-relaxed font-medium">
-                {item}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Cons Section */}
-      <div className="space-y-3">
-        <h4 className="text-xs font-black uppercase text-orange-600 flex items-center gap-2 tracking-wider">
-          <X className="w-4 h-4" /> Considerations
-        </h4>
-        <div className="grid gap-2.5">
-          {cons.map((item, idx) => (
-            <div
-              key={idx}
-              className="flex items-start gap-3 px-4 py-3 rounded-lg bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-900/50 hover:shadow-sm transition-all"
-            >
-              <X className="w-5 h-5 text-orange-600 dark:text-orange-400 mt-0.5 flex-shrink-0" />
-              <p className="text-sm text-orange-900 dark:text-orange-100 leading-relaxed font-medium">
-                {item}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </CardContent>
-  </Card>
-);
-
 const ResultsPage = () => {
-  const isJobAWinner = data.winner === data.JobA;
-  const isJobBWinner = data.winner === data.JobB;
+  const { data } = useDataStore();
+  const analysis = Array.isArray(data) ? data[0] : data;
 
-  return (
-    <main className="min-h-screen w-full bg-gradient-to-br from-background via-background to-background/95">
-      <div className="max-w-7xl mx-auto w-full px-4 md:px-8 py-12 md:py-16">
-        {/* Hero Section */}
-        <section className="mb-16">
-          <div className="flex items-start gap-3 mb-6">
-            <Trophy className="text-primary w-8 h-8 flex-shrink-0 mt-1" />
-            <Badge className="bg-primary/15 text-primary border border-primary/30 font-semibold">
-              AI Analysis Complete
-            </Badge>
-          </div>
+  if (!analysis) return null;
 
-          <h1 className="text-5xl md:text-6xl font-black tracking-tighter leading-tight mb-4">
-            Choose{" "}
-            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              {data.winner}
-            </span>
+  // --- INVALID STATE UI ---
+  if (analysis.isValid === false) {
+    return (
+      <main className="h-[calc(100vh-64px)] w-full bg-background flex items-center justify-center p-6 font-sans">
+        <div className="max-w-2xl w-full border-[10px] border-zinc-950 dark:border-zinc-100 p-8 md:p-16 relative">
+          <Badge
+            variant="outline"
+            className="rounded-none border-zinc-950 dark:border-zinc-100 font-black uppercase text-[10px] tracking-[0.3em] px-3 mb-8"
+          >
+            Analysis Failed
+          </Badge>
+
+          <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9] uppercase italic mb-6">
+            Incoherent <br /> Input Data
           </h1>
 
-          <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed mb-8 font-medium">
-            {data.summary}
+          <p className="text-lg md:text-xl font-bold italic text-zinc-500 mb-10 leading-tight">
+            "{analysis.summary}"
           </p>
 
-          {/* Score Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <ScoreOverview
-              name={data.JobA}
-              score={data.scores.A}
-              isWinner={isJobAWinner}
-            />
-            <ScoreOverview
-              name={data.JobB}
-              score={data.scores.B}
-              isWinner={isJobBWinner}
-            />
-          </div>
-        </section>
-
-        {/* Detail Comparison Section */}
-        <section className="mb-16">
-          <h2 className="text-2xl font-black mb-8 tracking-tight">
-            Detailed Breakdown
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <JobDetailCard
-              name={data.JobA}
-              isWinner={isJobAWinner}
-              pros={data.prosA}
-              cons={data.consA}
-            />
-            <JobDetailCard
-              name={data.JobB}
-              isWinner={isJobBWinner}
-              pros={data.prosB}
-              cons={data.consB}
-            />
-          </div>
-        </section>
-
-        {/* Comparison Table */}
-        <section className="mb-16">
-          <h2 className="text-2xl font-black mb-8 tracking-tight">
-            Complete Comparison
-          </h2>
-          <Card className="border-border overflow-hidden">
-            <CardHeader className="bg-muted/40 pb-4">
-              <CardTitle>Side-by-Side Analysis</CardTitle>
-              <CardDescription>
-                Detailed metrics for each opportunity
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-muted/20 hover:bg-muted/20 border-b-2 border-border">
-                    <TableHead className="w-[220px] font-black py-4 px-6">
-                      Criterion
-                    </TableHead>
-                    <TableHead
-                      className={clsx(
-                        "py-4 font-black",
-                        isJobAWinner && "text-primary",
-                      )}
-                    >
-                      {data.JobA}
-                      {isJobAWinner && " ★"}
-                    </TableHead>
-                    <TableHead
-                      className={clsx(
-                        "py-4 font-black",
-                        isJobBWinner && "text-primary",
-                      )}
-                    >
-                      {data.JobB}
-                      {isJobBWinner && " ★"}
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {data.comparisonPoints.map((item) => (
-                    <TableRow
-                      key={item.criterion}
-                      className="border-b border-border hover:bg-muted/30 transition-colors"
-                    >
-                      <TableCell className="font-semibold py-4 px-6 bg-muted/5">
-                        {item.criterion}
-                      </TableCell>
-                      <TableCell
-                        className={clsx(
-                          "py-4 px-6 transition-colors",
-                          item.winner === data.JobA
-                            ? "bg-primary/10 font-semibold text-primary"
-                            : "text-muted-foreground",
-                        )}
-                      >
-                        {item.jobAAnalysis}
-                      </TableCell>
-                      <TableCell
-                        className={clsx(
-                          "py-4 px-6 transition-colors",
-                          item.winner === data.JobB
-                            ? "bg-primary/10 font-semibold text-primary"
-                            : "text-muted-foreground",
-                        )}
-                      >
-                        {item.jobBAnalysis}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* CTA Section */}
-        <section className="text-center">
-          <Button
-            onClick={() => (window.location.href = "/")}
-            className="group bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 py-6 text-lg rounded-xl"
+          <Link
+            className="flex  items-center h-16  text-center justify-center rounded-none border-2 border-zinc-950 dark:border-zinc-100 px-12 font-black uppercase tracking-[0.3em] hover:bg-zinc-950 hover:text-zinc-100 dark:hover:bg-zinc-100 dark:hover:text-zinc-950 transition-all group text-xs"
+            href={"/"}
           >
-            Start New Comparison
-            <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-          </Button>
+            Reset & Try Again
+            <RefreshCcw className="ml-4 w-5 h-5 group-hover:translate-x-2 transition-transform" />
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
+  const isTie = analysis.winner === "Tie";
+  const isJobAWinner =
+    isTie || analysis.winner === "Job A" || analysis.winner === analysis.JobA;
+  const isJobBWinner =
+    isTie || analysis.winner === "Job B" || analysis.winner === analysis.JobB;
+
+  return (
+    <main className="min-h-screen bg-background text-foreground transition-colors duration-300 selection:bg-foreground selection:text-background font-sans">
+      <div className="max-w-7xl mx-auto px-6 py-12 lg:py-16">
+        <header className="mb-20">
+          <div className="flex items-center gap-4 mb-10">
+            <Badge
+              variant="outline"
+              className="rounded-none border-zinc-950 dark:border-zinc-100 font-black uppercase text-[10px] tracking-[0.3em] px-3"
+            >
+              Analysis Results
+            </Badge>
+            <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
+            <Activity className="w-4 h-4 opacity-30" />
+          </div>
+
+          <h1 className="text-7xl md:text-[110px] lg:text-[140px] font-black tracking-tighter leading-[0.8] uppercase italic mb-12 break-words">
+            {isTie ? "Split Decision" : analysis.winner}
+          </h1>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            <div className="lg:col-span-7 border-l-[10px] border-zinc-950 dark:border-zinc-100 pl-8">
+              <p className="text-xl md:text-2xl font-bold leading-tight tracking-tight text-zinc-600 dark:text-zinc-400 italic">
+                {analysis.summary}
+              </p>
+            </div>
+            <div className="lg:col-span-5">
+              {analysis.salaryInsight && (
+                <div className="p-8 border-2 border-zinc-950 dark:border-zinc-100 bg-zinc-50 dark:bg-zinc-900/50 relative overflow-hidden">
+                  <DollarSign className="absolute -right-6 -bottom-6 w-24 h-24 opacity-5 text-zinc-950 dark:text-zinc-100" />
+                  <div className="relative z-10">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] bg-zinc-950 dark:bg-zinc-100 text-zinc-50 dark:text-zinc-950 px-2 py-0.5 mb-4 inline-block">
+                      Market Valuation
+                    </span>
+                    <p className="text-sm md:text-base font-black uppercase leading-snug italic break-words">
+                      {analysis.salaryInsight}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </header>
+
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-px bg-zinc-200 dark:bg-zinc-800 border-2 border-zinc-200 dark:bg-zinc-800 mb-20 shadow-sm">
+          <ScoreOverview
+            name={analysis.JobA}
+            score={analysis.scores.A}
+            isWinner={isJobAWinner}
+            isTie={isTie}
+          />
+          <ScoreOverview
+            name={analysis.JobB}
+            score={analysis.scores.B}
+            isWinner={isJobBWinner}
+            isTie={isTie}
+          />
         </section>
+
+        <section className="mb-24 grid grid-cols-1 md:grid-cols-2 gap-12">
+          {/* Job A Details */}
+          <div className="space-y-8">
+            <h2 className="text-2xl font-black uppercase tracking-tighter italic border-b-2 border-zinc-950 dark:border-zinc-100 pb-2">
+              {analysis.JobA}
+            </h2>
+            <div className="space-y-4">
+              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">
+                Strengths
+              </p>
+              <ul className="space-y-2">
+                {analysis.prosA.map((pro: string, i: number) => (
+                  <li
+                    key={i}
+                    className="flex items-center gap-3 text-sm font-bold uppercase italic"
+                  >
+                    <Check className="w-4 h-4 shrink-0" /> {pro}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="space-y-4">
+              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">
+                Considerations
+              </p>
+              <ul className="space-y-2">
+                {analysis.consA.map((con: string, i: number) => (
+                  <li
+                    key={i}
+                    className="flex items-center gap-3 text-sm font-medium uppercase italic text-zinc-500"
+                  >
+                    <AlertCircle className="w-4 h-4 shrink-0 opacity-50" />{" "}
+                    {con}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Job B Details */}
+          <div className="space-y-8">
+            <h2 className="text-2xl font-black uppercase tracking-tighter italic border-b-2 border-zinc-950 dark:border-zinc-100 pb-2">
+              {analysis.JobB}
+            </h2>
+            <div className="space-y-4">
+              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">
+                Strengths
+              </p>
+              <ul className="space-y-2">
+                {analysis.prosB.map((pro: string, i: number) => (
+                  <li
+                    key={i}
+                    className="flex items-center gap-3 text-sm font-bold uppercase italic"
+                  >
+                    <Check className="w-4 h-4 shrink-0" /> {pro}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="space-y-4">
+              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">
+                Considerations
+              </p>
+              <ul className="space-y-2">
+                {analysis.consB.map((con: string, i: number) => (
+                  <li
+                    key={i}
+                    className="flex items-center gap-3 text-sm font-medium uppercase italic text-zinc-500"
+                  >
+                    <AlertCircle className="w-4 h-4 shrink-0 opacity-50" />{" "}
+                    {con}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section className="mb-20">
+          <div className="flex items-center gap-4 mb-10">
+            <h2 className="text-3xl font-black uppercase tracking-tighter italic shrink-0">
+              Comparison Matrix
+            </h2>
+            <div className="h-[3px] flex-1 bg-zinc-950 dark:bg-zinc-100" />
+            <ArrowDown className="w-5 h-5 opacity-50" />
+          </div>
+
+          <div className="border-2 border-zinc-950 dark:border-zinc-100 bg-background overflow-hidden">
+            <Table className="w-full table-fixed border-collapse">
+              <TableHeader className="bg-zinc-950 dark:bg-zinc-100">
+                <TableRow className="hover:bg-transparent border-none">
+                  <TableHead className="w-[20%] py-6 px-6 text-zinc-100 dark:text-zinc-950 font-black uppercase text-[10px] tracking-widest border-r border-zinc-800 dark:border-zinc-200">
+                    Metric
+                  </TableHead>
+                  <TableHead className="w-[40%] py-6 px-6 text-zinc-100 dark:text-zinc-950 font-black uppercase tracking-tighter text-xs md:text-sm border-r border-zinc-800 dark:border-zinc-200">
+                    {analysis.JobA}
+                  </TableHead>
+                  <TableHead className="w-[40%] py-6 px-6 text-zinc-100 dark:text-zinc-950 font-black uppercase tracking-tighter text-xs md:text-sm">
+                    {analysis.JobB}
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {analysis.comparisonPoints.map((item: any, idx: number) => (
+                  <TableRow
+                    key={idx}
+                    className="border-b border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-none"
+                  >
+                    <TableCell className="py-8 px-6 font-black uppercase text-[10px] tracking-widest text-zinc-400 border-r border-zinc-200 dark:border-zinc-800 align-top">
+                      {item.criterion}
+                    </TableCell>
+                    <TableCell
+                      className={clsx(
+                        "py-8 px-6 text-xs md:text-sm font-bold uppercase tracking-tight italic leading-relaxed border-r border-zinc-200 dark:border-zinc-800 align-top whitespace-normal break-words",
+                        (item.winner === "Job A" ||
+                          item.winner === analysis.JobA) &&
+                          !isTie
+                          ? "bg-zinc-100/50 dark:bg-zinc-800/50 text-foreground"
+                          : "text-zinc-500",
+                      )}
+                    >
+                      {item.jobAAnalysis}
+                    </TableCell>
+                    <TableCell
+                      className={clsx(
+                        "py-8 px-6 text-xs md:text-sm font-bold uppercase tracking-tight italic leading-relaxed align-top whitespace-normal break-words",
+                        (item.winner === "Job B" ||
+                          item.winner === analysis.JobB) &&
+                          !isTie
+                          ? "bg-zinc-100/50 dark:bg-zinc-800/50 text-foreground"
+                          : "text-zinc-500",
+                      )}
+                    >
+                      {item.jobBAnalysis}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </section>
+
+        <footer className="flex flex-col md:flex-row items-center justify-between gap-8 pt-16 border-t-4 border-zinc-950 dark:border-zinc-100">
+          <p className="text-[11px] font-black uppercase tracking-[0.5em] text-zinc-400 italic">
+            Decision.Orb.v1.0
+          </p>
+          <Link
+            className="flex  items-center h-16 rounded-none border-2 border-zinc-950 dark:border-zinc-100 px-12 font-black uppercase tracking-[0.3em] hover:bg-zinc-950 hover:text-zinc-100 dark:hover:bg-zinc-100 dark:hover:text-zinc-950 transition-all group text-xs"
+            href={"/"}
+          >
+            Start New Comparison{" "}
+            <MoveRight className="ml-4 w-5 h-5 group-hover:translate-x-2 transition-transform" />
+          </Link>
+        </footer>
       </div>
     </main>
   );

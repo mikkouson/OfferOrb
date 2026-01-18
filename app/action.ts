@@ -46,10 +46,10 @@ export async function analyzeJobs(formData: JobSchemaType) {
     use this as format
     {
   "isValid": ,
-  "summary": "",
+  "summary": "", i want  the company name instead of placeholder like JobA or JobB
   "JobA": "",
   "JobB": "",
-  "winner": "",
+  "winner": "",  company full name its either the jobA or jobB
   "scores": {
     "A": 
     "B": 
