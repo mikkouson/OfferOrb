@@ -18,7 +18,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { analyzeJobs } from "./action";
-import { LoaderCircle, ArrowRight, Stars, ArrowLeftRight } from "lucide-react";
+import {
+  LoaderCircle,
+  ArrowRight,
+  Stars,
+  ArrowLeftRight,
+  Sparkles,
+} from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Card,
@@ -69,38 +75,56 @@ export default function InputForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
-        <div className="flex flex-col items-center py-6">
-          <h2 className="text-fuchsia-600 scroll-m-20 text-3xl font-bold tracking-tight first:mt-0">
-            Reviewing multiple offers?
-          </h2>
-
-          <p className="leading-7 not-first:mt-4 text-center">
-            Paste the job descriptions, salary details, and benefits for two
-            positions below.
-            <br /> Our AI will help you decide which one is the best fit for
-            your future.
+        <div className="flex flex-col items-center py-12 px-4 sm:px-6">
+          <div className="inline-flex items-center gap-2 mb-4">
+            <div className="w-2 h-2 rounded-full bg-primary"></div>
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
+              Career Decision Tool
+            </span>
+            <div className="w-2 h-2 rounded-full bg-primary"></div>
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-bold text-balance tracking-tight mb-4">
+            Find Your Perfect Role
+          </h1>
+          <p className="text-lg text-muted-foreground text-center max-w-2xl leading-relaxed">
+            Compare job offers side by side. Our AI analyzes salary, benefits,
+            growth opportunities, and work-life balance to help you choose the
+            best path forward.
           </p>
         </div>
-        <div className="w-full py-4 flex flex-col sm:flex-row gap-4 justify-between">
-          <Card className="w-full">
-            <CardHeader>
-              <CardTitle>Job A</CardTitle>
+
+        <div className="grid w-full grid-cols-1 lg:grid-cols-2 gap-6 px-4 sm:px-6 py-8">
+          {/* Job A Card */}
+          <Card className="border-2 hover:border-primary/50 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-primary/10">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-2xl">Position A</CardTitle>
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-semibold">
+                  A
+                </div>
+              </div>
+              <CardDescription className="text-sm">
+                Enter the details for your first opportunity
+              </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
               <FormField
                 control={form.control}
                 name="JobA"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel className="text-sm font-medium">
+                      Job Details
+                    </FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Type your message here."
+                        placeholder="Paste job description, salary, benefits, location, and any other relevant details..."
                         {...field}
-                        className="h-64 resize-none"
+                        className="resize-none border-2 focus:border-primary transition-colors h-48 p-4"
                       />
                     </FormControl>
-                    <FormDescription>
-                      Enter the first job offer details.
+                    <FormDescription className="text-xs">
+                      Include salary, benefits, role, location, and company info
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -108,25 +132,38 @@ export default function InputForm() {
               />
             </CardContent>
           </Card>
-          <Card className="w-full">
-            <CardHeader>
-              <CardTitle>Job B</CardTitle>
+
+          {/* Job B Card */}
+          <Card className="border-2 hover:border-accent/50 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-accent/10">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-2xl">Position B</CardTitle>
+                <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center text-accent font-semibold">
+                  B
+                </div>
+              </div>
+              <CardDescription className="text-sm">
+                Enter the details for your second opportunity
+              </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
               <FormField
                 control={form.control}
                 name="JobB"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel className="text-sm font-medium">
+                      Job Details
+                    </FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Type your message here."
+                        placeholder="Paste job description, salary, benefits, location, and any other relevant details..."
                         {...field}
-                        className="h-64 resize-none"
+                        className="resize-none border-2 focus:border-accent transition-colors h-48 p-4"
                       />
                     </FormControl>
-                    <FormDescription>
-                      Enter the first job offer details.
+                    <FormDescription className="text-xs">
+                      Include salary, benefits, role, location, and company info
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -135,29 +172,30 @@ export default function InputForm() {
             </CardContent>
           </Card>
         </div>
-        <div className="w-full flex justify-center">
+
+        <div className="w-full flex justify-center py-8 px-4 sm:px-6">
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="group rounded-2xl "
+            className="group px-8 py-6 rounded-xl text-base font-semibold shadow-lg hover:shadow-xl hover:shadow-primary/30 disabled:shadow-none"
           >
             {isSubmitting ? (
-              <>
-                Comparing
+              <div className="flex gap-3 items-center">
+                <span>Analyzing Offers</span>
                 <LoaderCircle
-                  className="animate-spin ms-2"
-                  size={16}
+                  className="animate-spin"
+                  size={18}
                   strokeWidth={2}
                   aria-hidden="true"
                 />
-              </>
+              </div>
             ) : (
-              <div className="flex gap-4 items-center">
-                <Stars />
-                <span className="text-md">Compare</span>
+              <div className="flex gap-3 items-center">
+                <Sparkles size={20} strokeWidth={2} aria-hidden="true" />
+                <span>Compare with AI</span>
                 <ArrowLeftRight
-                  className="-me-1 ms-2 opacity-60 transition-transform group-hover:translate-x-0.5"
-                  size={16}
+                  className="opacity-60 transition-transform group-hover:scale-110"
+                  size={18}
                   strokeWidth={2}
                   aria-hidden="true"
                 />
@@ -165,15 +203,6 @@ export default function InputForm() {
             )}
           </Button>
         </div>
-
-        {result && (
-          <div className="max-w-full mx-auto">
-            <h3 className="text-lg font-semibold mb-4">Analysis Result:</h3>
-            <pre className="whitespace-pre-wrap wrap-break-word overflow-x-auto bg-gray-50 p-4 rounded-md text-sm">
-              {JSON.stringify(result, null, 2)}
-            </pre>
-          </div>
-        )}
       </form>
     </Form>
   );
