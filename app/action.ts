@@ -1,8 +1,7 @@
 "use server";
 
 import { JobSchema, JobSchemaType } from "./type";
-import { NextRequest, NextResponse } from "next/server";
-import { OpenAI } from "openai";
+import { Ollama } from "ollama";
 
 export async function analyzeJobs(formData: JobSchemaType) {
   const result = JobSchema.safeParse(formData);
@@ -31,42 +30,107 @@ export async function analyzeJobs(formData: JobSchemaType) {
     ${formData.JobA}
 
     JOB OFFER B:
-    ${formData.JobA}
+    ${formData.JobB}
 
     Compare them based on: Salary, Role, Growth, Culture, and Work-Life Balance.
     
     CRITICAL INSTRUCTIONS FOR BREVITY:
     - Keep "summary" to 2 sentences maximum. Direct and punchy.
-    - Keep "jobAAnalysis" and "jobBAnalysis" in comparisonPoints to MAX 10-15 words. extremely concise.
+    - Keep "jobAAnalysis" and "jobBAnalysis" in comparisonPoints to MAX 10-15 words. extremely concise add whos the winner.
     - "salaryInsight" should be 1 sentence.
     - Pros/Cons should be short phrases (e.g., "High base salary", "Remote work"), not sentences.
     
     Assign a score from 0-100. Determine a winner.
+
+    set is valid false if the user input same job
+
+
+    use this as format
+    {
+  "isValid": ,
+  "summary": "", i want  the company name instead of placeholder like JobA or JobB
+  "JobA": "",
+  "JobB": "",
+  "winner": "",  company full name its either the jobA or jobB
+  "scores": {
+    "A": 
+    "B": 
+  },
+  "prosA": [
+    "",
+    "",
+    "",
+   
+  ],
+  "consA": [
+    "",
+    "",
+    "",
+  ],
+  "prosB": [
+    "",
+    "",
+    "",
+  ],
+  "consB": [
+       "",
+    "",
+    "",
+  ],
+  "comparisonPoints": [
+    {
+      "criterion": "",
+      "jobAAnalysis": "",
+      "jobBAnalysis":"",
+      "winner": "" company name
+    },
+    {
+      "criterion": "",
+      "jobAAnalysis": "",
+      "jobBAnalysis": "",
+      "winner": "",
+    },
+    {
+      "criterion": "",
+      "jobAAnalysis": "",
+      "jobBAnalysis": "",
+      "winner": ""
+    },
+    {
+      "criterion": "",
+      "jobAAnalysis": "",
+      "jobBAnalysis": "",
+      "winner": ""
+    },
+    {
+      "criterion": "",
+      "jobAAnalysis": "",
+      "jobBAnalysis": "",
+      "winner": ""
+    }
+  ],
+  "salaryInsight": ""
+}
   `;
 
-  const client = new OpenAI({
-    baseURL: "https://router.huggingface.co/v1",
-    apiKey: process.env.NEXT_PUBLIC_HF_TOKEN,
+  const ollama = new Ollama({
+    host: "https://ollama.com",
+    headers: {
+      Authorization: "Bearer " + process.env.NEXT_PUBLIC_OLLAMA,
+    },
+  });
+  const response = await ollama.chat({
+    model: "gpt-oss:120b",
+    messages: [{ role: "user", content: prompt }],
+    stream: false,
+    format: "json",
   });
 
-  const response = await client.chat.completions.create({
-    model: "zai-org/GLM-4.7:novita",
-    messages: [
-      {
-        role: "user",
-        content: prompt,
-      },
-    ],
-  });
-
-  return {
-    content: response.choices[0]?.message?.content ?? "",
-    usage: response.usage
-      ? {
-          prompt_tokens: response.usage.prompt_tokens,
-          completion_tokens: response.usage.completion_tokens,
-          total_tokens: response.usage.total_tokens,
-        }
-      : null,
-  };
+  try {
+    const res = JSON.parse(response.message.content);
+    return res;
+  } catch (error) {
+    console.log(error);
+    throw new Error("error");
+  }
 }

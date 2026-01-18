@@ -1,0 +1,70 @@
+{
+  "isValid": true,
+  "summary": "Twine’s senior consulting role offers higher pay and autonomy, whereas Greenstone provides a junior position with strong growth and team culture. Overall, the junior role scores higher for career development.",
+  "JobA": "Twine",
+  "JobB": "Greenstone",
+  "winner": "Greenstone",
+  "loser": "Twine",
+
+  "scores": {
+    "A": 78,
+    "B": 85
+  },
+  "prosA": [
+    "High autonomy",
+    "Consulting focus",
+    "Remote work",
+    "Strategic influence"
+  ],
+  "consA": [
+    "Requires senior expertise",
+    "Limited mentorship",
+    "Irregular workload",
+    "Pay not disclosed"
+  ],
+  "prosB": [
+    "Skill development",
+    "Mentorship from seniors",
+    "Structured team",
+    "Clear career path"
+  ],
+  "consB": [
+    "Lower salary",
+    "Junior expectations",
+    "Potential limited remote work",
+    "Broad repetitive tasks"
+  ],
+  "comparisonPoints": [
+    {
+      "criterion": "Salary",
+      "jobAAnalysis": "Likely higher pay, senior consulting rates.",
+      "jobBAnalysis": "Entry-level salary, modest compensation.",
+      "winner": "Twine"
+    },
+    {
+      "criterion": "Role",
+      "jobAAnalysis": "Senior consultant, strategic influence, independent.",
+      "jobBAnalysis": "Junior developer, execution-focused, learning role.",
+      "winner": "Twine"
+    },
+    {
+      "criterion": "Growth",
+      "jobAAnalysis": "Limited upward trajectory, expertise already high.",
+      "jobBAnalysis": "Fast skill acquisition, clear promotion path.",
+      "winner": "Greenstone"
+    },
+    {
+      "criterion": "Culture",
+      "jobAAnalysis": "Freelance marketplace vibe, less structured.",
+      "jobBAnalysis": "Team-oriented, mentorship-driven environment.",
+      "winner": "Greenstone"
+    },
+    {
+      "criterion": "Work-Life Balance",
+      "jobAAnalysis": "Fully remote, flexible schedule.",
+      "jobBAnalysis": "Potential office/hybrid, set hours.",
+      "winner": "Twine"
+    }
+  ],
+  "salaryInsight": "Job A likely commands a higher senior-level rate, while Job B offers entry-level compensation."
+}
