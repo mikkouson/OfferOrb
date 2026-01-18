@@ -42,6 +42,8 @@ export async function analyzeJobs(formData: JobSchemaType) {
     
     Assign a score from 0-100. Determine a winner.
 
+    set is valid false if the user input same job
+
 
     use this as format
     {
